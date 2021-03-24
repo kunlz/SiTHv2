@@ -21,6 +21,9 @@ function [Tr, Es, wa, theta_new, DeepDrain] = sw_balance(Topt, Ta, IWS, pTr_ly, 
     % Constrains of temperature
     S_tem = StressTemp(Topt, Ta);
 
+    % water holding capacity (%)
+    whc = wfc - wp;  % field capacity (wfc, %) minus wilting point (wp, %)
+
     d = [d1 d2 d3]
     d_sum = sum(d);
     zm_s = [soildeep(1), soildeep(1) + soildeep(2), sum(soildeep)];
@@ -30,10 +33,10 @@ function [Tr, Es, wa, theta_new, DeepDrain] = sw_balance(Topt, Ta, IWS, pTr_ly, 
 
         % layer #1 new soil water content in unsaturated zone,
         % and possible exceeded water downward to layer #2
-        w1_unsat = wo(1) + IWS ./ (d(1) .* soilpar(3)); % soil water content of unsaturated zone
+        w1_unsat = wo(1) + IWS ./ (d1 .* whc); % soil water content of unsaturated zone
 
         if w1_unsat > 1
-            vw_1 = (w1_unsat - 1) .* (d(1) .* soilpar(3)); % exceeded soil water
+            vw_1 = (w1_unsat - 1) .* (d1 .* whc); % exceeded soil water
             w1_unsat = 1;
         else
             % no additional exceeded soil water
