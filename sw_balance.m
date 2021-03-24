@@ -34,7 +34,7 @@ function [Tr, Es, wa, theta_new, DeepDrain] = sw_balance(Topt, Ta, IWS, pTr_ly, 
         % layer #1 new soil water content in unsaturated zone,
         % and possible exceeded water downward to layer #2
         w1_unsat = wo(1) + IWS ./ (d1 .* whc); % soil water content of unsaturated zone
-
+        
         if w1_unsat > 1
             vw_1 = (w1_unsat - 1) .* (d1 .* whc); % exceeded soil water
             w1_unsat = 1;
