@@ -45,7 +45,6 @@ function [Tr, Es, wa, theta_new, DeepDrain] = sw_balance(Topt, Ta, IWS, pTr_ly, 
 
             wa1 = theta_sat; % current soil water content
             vw1 = wc_s1 + IWS - wc_m1; % exceeded water
-
         else
 
             % soil water content in unsaturated zone
