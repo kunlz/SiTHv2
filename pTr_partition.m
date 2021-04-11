@@ -1,30 +1,35 @@
 % ---------------------------------- %
 %  Potential transpiration partition %
 % -----------------------------------%
-function [pTr_ly] = pTr_partition(pEc,wo,PFTpar,wet)
-% ------- function input -------
-% pEc    :  Potnetial Evaporation on canopy
-% w      :  Initialized values for soil moisture
-% PFTpar :  PFT parameters
-% ------- function output ------
-% pTr_ly :  seperate potnetial Transpiration
-% -------
+function [Tr_p1, Tr_p2, Tr_p3] = pTr_partition(pEc, wa1, wa2, wa3, D50, c, b, theta_sat, wet, zm)
+    % ------- function input -------
+    % pEc    :  Potnetial Evaporation on canopy
+    % w      :  Initialized values for soil moisture
+    % PFTpar :  PFT parameters
+    % ------- function output ------
+    % pTr_ly :  seperate potnetial Transpiration
+    % -------
 
-% Get all avaliable water contents through root distribution
-wr = PFTpar(1).*wo(1)+PFTpar(2).*wo(2)+(1-PFTpar(1)-PFTpar(2)).*wo(3);
+    z1 = zm(1);
+    z2 = zm(2);
+    z3 = zm(3);
+    
+    r1 = (1 / (1 + (z1 / D50)^c)); 
+    r2 = (1 / (1 + (z2 / D50)^c)) - (1 / (1 + (z1 / D50)^c)); 
+    r3 = (1 / (1 + (z3 / D50)^c)) - (1 / (1 + (z2 / D50)^c)); 
+    
+    % the maximum transpiration rate of each soil layer, Tr_p
+    % Get all avaliable water contents through root distribution
+    wr = r1 * (wa1 / theta_sat)^b + r2 * (wa2 / theta_sat)^b + r3 * (wa3 / theta_sat)^b;
 
-% Root distribution adjusted by soil water content
-beta1 = PFTpar(1).*wo(1)./wr;
-beta2 = PFTpar(2).*wo(2)./wr;
-beta3 = (1-PFTpar(1)-PFTpar(2)).*wo(3)./wr;
+    % Root distribution adjusted by soil water content
+    beta1 = r1 * (wa1 / theta_sat)^b / wr;
+    beta2 = r2 * (wa2 / theta_sat)^b / wr;
+    beta3 = r3 * (wa3 / theta_sat)^b / wr;
 
-beta1(wr==0) = 0;
-beta2(wr==0) = 0;
-beta3(wr==0) = 0;
-
-% Get the potentail Transpiration for each layer
-pTr_ly(:,:,1) = beta1.*pEc.*(1-wet);
-pTr_ly(:,:,2) = beta2.*pEc.*(1-wet);
-pTr_ly(:,:,3) = beta3.*pEc.*(1-wet);
+    % potentail transpiration rate for different layers
+    Tr_p1 = (1 - wet) * beta1 * pEc;
+    Tr_p2 = (1 - wet) * beta2 * pEc;
+    Tr_p3 = (1 - wet) * beta3 * pEc;
 
 end
