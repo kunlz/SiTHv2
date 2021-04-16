@@ -1,7 +1,8 @@
 function [PFTpar] = PFTPara(LC)
+
 % ----------Input----------
 % LC      :: Landcover Type raster
-% ----------Output----------
+% ----------Output---------
 % PFTpar  ::
 %  1  z1 -- the fraction of the plants roots which are in the top soil layer
 %  2  z2 -- the fraction of the plants roots which are in the second and third layers

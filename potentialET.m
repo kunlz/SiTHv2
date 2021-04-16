@@ -14,7 +14,7 @@ function [pEc,pEs] = potentialET(Rn,G,LAI,Ta,Pa)
 % pEs   :  potnetial Soil evaporation, mm/day
 % ------
 k = 0.6; % the empirical extinction coefficient set as 0.6
-alpha = 1.26; % PT coefficient for water saturated surface
+alpha = 1.46; % PT coefficient for water saturated surface
 Cp = 1013; % Specific heat (J kg-1 C-1)
 eps = 0.622; % e (unitless) is the ratio of molecular weight of water to dry air (equal to 0.622)
 

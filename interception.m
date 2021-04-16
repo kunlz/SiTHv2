@@ -1,7 +1,7 @@
 % -------------------------- %
 %  Interception evaporation  %
 % -------------------------- %
-function [Ei,wetT] = interception(pEc,LAI,Rain,PFTpar3)
+function [Ei,wetT] = interception(pEc,LAI,Rain,pftpar)
 % ------- function input -------
 % pEc    : potnetial Evaporation on canopy
 % Rain   :
@@ -23,9 +23,10 @@ function [Ei,wetT] = interception(pEc,LAI,Rain,PFTpar3)
 % -------------------------------------------------------------------------
 
 % x, parameter values, used for calculating daily rainfall interception
-inc = PFTpar3;
-SI = min(Rain,inc.*LAI.*Rain);
-wetT = min(x.*SI./pEc,1);
+inc = pftpar(1);
+Sc = min(Rain, inc.*LAI.*Rain);
+
+wetT = min(0.7.*Sc./pEc,1);
 
 if pEc < 1e-3
 
