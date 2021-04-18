@@ -8,7 +8,7 @@ function [srf, IWS] = runoff(Pnet, zgw, zm, wa, soilpar)
     %            as a function of the WHC in that layer
     % soilpar  : Soil parameters according to Soil type
     % Pnet     : Net precipitation = P-I+Snowmelt
-    % zgw      ：groundwater table depth
+    % zgw      : groundwater table depth
     % --------- function output ------
     % srf      : Surface Runoff, mm
     % IWS      : Water enter into soil surface, mm
@@ -23,8 +23,6 @@ function [srf, IWS] = runoff(Pnet, zgw, zm, wa, soilpar)
 
     % saturated wa for specific soil type
     theta_sat = soilpar(3);
-
-    % calculate the thickness of unsaturated soil in ith layer, (mm)
 
     if zgw <= 0
 
@@ -90,7 +88,7 @@ function [srf, IWS] = runoff(Pnet, zgw, zm, wa, soilpar)
             srf = 0;
         end
 
-    else
+    elseif zgw > zm(1) + zm(2) + zm(3)
 
         % the thickness of unsaturated soil in ith layer, (mm)
         d1 = zm(1);
@@ -111,14 +109,15 @@ function [srf, IWS] = runoff(Pnet, zgw, zm, wa, soilpar)
         else
             srf = 0;
         end
-
+        
     end
 
     % actual water enter into the soil surface, (mm)
     IWS = min(Vmax, Pnet - srf);
+    IWS = max(0, IWS);
 
     % redundant water --> runoff (balance)
-    if IWS == Vmax
+    if IWS == Vmax || Vmax <= 0
         srf = Pnet - Vmax;
     end
 
