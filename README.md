@@ -1,6 +1,6 @@
 # SiTH
 
-#### This is a novel Eco-hydrological model (SiTH) developed for estimating the essential variables associated with terrestrial water cycle, which is based on the scheme of the groundwater-soil-plant-atmosphere continuum (GSPAC).
+#### This is a novel Eco-hydrological model (SiTH, Simple Terrestrial Hydrosphere) developed for estimating the essential variables associated with terrestrial water cycle, which is based on the scheme of the groundwater-soil-plant-atmosphere continuum (GSPAC).
 
 <img src="image\fig1.png" alt="fig1" style="zoom:40%;" />
 
