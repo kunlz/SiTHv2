@@ -1,4 +1,4 @@
-function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = Cal_SiTHM(Rni, Tai, Precii, Pai, Gi, LAIii, Top, s_VODi, ...
+function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii, Pai, Gi, LAIii, Top, s_VODi, ...
         soilpar, pftpar, wa, zgw, snp, optpara, spinfg)
 
     if spinfg == 1
@@ -23,7 +23,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = Cal_SiTHM(Rni, Tai, Preci
                 LAI = LAIii(i, 1);
                 s_VOD = s_VODi(i, 1);
 
-                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTHM(Rn, Ta, Top, ...
+                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Top, ...
                     Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
                 ETs(i, 1) = Et;
@@ -59,7 +59,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = Cal_SiTHM(Rni, Tai, Preci
             LAI = LAIii(i, 1);
             s_VOD = s_VODi(i, 1);
 
-            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTHM(Rn, Ta, Top, ...
+            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Top, ...
                 Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
             ETs(i, 1) = Et;

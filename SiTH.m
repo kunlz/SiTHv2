@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------------- %
 %                                                                         %
 %                            ==============                               %
-%                              SiTHM model                                %
+%                              SiTH model                                %
 %                            ==============                               %
 %                                                                         %
 % Written by : Kun Zhang & Gaofeng Zhu;  Lanzhou University, China        %
@@ -11,7 +11,7 @@
 % ----------------------------------------------------------------------- %
 
 
-function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTHM(Rn, Ta, Topt,...
+function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta, Topt,...
     Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara) 
 % Main function
 % -------------------------------------------------------------------------
