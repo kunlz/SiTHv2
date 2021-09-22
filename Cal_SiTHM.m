@@ -12,7 +12,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = Cal_SiTHM(Rni, Tai, Preci
         RF = zeros(size(Rni, 1), 1);
         GW = zeros(size(Rni, 1), 1);
 
-        for k = 1 : 8 % set the spin-up time (500 years)
+        for k = 1 : 500 % set the spin-up time (500 years)
             for i = 1:size(Rni, 1)
 
                 Rn = Rni(i, 1);
