@@ -1,4 +1,5 @@
-function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii, Pai, Gi, LAIii, Top, s_VODi, ...
+function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, Precii, IWUi,...
+        Pai, Gi, LAIii, Top, s_VODi, ...
         soilpar, pftpar, wa, zgw, snp, optpara, spinfg)
 
     if spinfg == 1
@@ -12,19 +13,22 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii
         RF = zeros(size(Rni, 1), 1);
         GW = zeros(size(Rni, 1), 1);
 
-        for k = 1 : 500 % set the spin-up time (500 years)
+        for k = 1 : 50 % set the spin-up time (50 years)
+
             for i = 1:size(Rni, 1)
 
                 Rn = Rni(i, 1);
                 Ta = Tai(i, 1);
+                Tas = Tasi(i, 1);
                 Pe = Precii(i, 1);
                 Pa = Pai(i, 1);
+                IWU = IWUi(i,1);
                 G = Gi(i, 1);
                 LAI = LAIii(i, 1);
                 s_VOD = s_VODi(i, 1);
 
-                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Top, ...
-                    Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
+                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~, theta_cs] = SiTH(Rn, Ta, Tas, Top, ...
+                    Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
                 ETs(i, 1) = Et;
                 Trs(i, 1) = Tr;
@@ -36,6 +40,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii
                 GW(i, 1) = zgw;
 
             end
+
         end
 
     else
@@ -53,14 +58,16 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii
 
             Rn = Rni(i, 1);
             Ta = Tai(i, 1);
+            Tas = Tasi(i, 1);
             Pe = Precii(i, 1);
             Pa = Pai(i, 1);
+            IWU = IWUi(i,1);
             G = Gi(i, 1);
             LAI = LAIii(i, 1);
             s_VOD = s_VODi(i, 1);
 
-            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Top, ...
-                Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
+            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~, theta_cs] = SiTH(Rn, Ta, Tas, Top, ...
+                Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
             ETs(i, 1) = Et;
             Trs(i, 1) = Tr;
@@ -68,10 +75,11 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Precii
             Eis(i, 1) = Ei;
             Esbs(i, 1) = Esb;
             SM(i, :) = wa;
-            RF(i, 1) = srf;
+            RF(i, 1) = theta_cs;
             GW(i, 1) = zgw;
 
         end
 
     end
+
 end

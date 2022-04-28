@@ -1,18 +1,18 @@
 % ----------------------------------------------------------------------- %
 %                                                                         %
 %                            ==============                               %
-%                              SiTH model                                %
+%                              SiTH model                                 %
 %                            ==============                               %
 %                                                                         %
-% Written by : Kun Zhang & Gaofeng Zhu;  Lanzhou University, China        %
+% Written by : Kun Zhang & Gaofeng Zhu
+%              University of Hong Kong, Lanzhou University                %
 % Original version : 5/9/2018                                             %
-% Last modified : 16/4/2021                                               %
-% Questions to zhangkun322@outlook.com                                    %
+% Last modified : 17/1/2022                                               %
+% Questions to zhangkun322@foxmail.com                                    %
 % ----------------------------------------------------------------------- %
 
-
-function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta, Topt,...
-    Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara) 
+function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax, theta_cs] = SiTH(Rn, Ta, Tas, Topt, ...
+    Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara)
 % Main function
 % -------------------------------------------------------------------------
 % Model inout  ::  1  - Rn      -- Net Radiation, W/m-2
@@ -42,9 +42,9 @@ function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta
 
 % parameter section-----
 alpha = optpara(1); % alpha = 1.26;
-D50   = optpara(2);
-D95   = optpara(3);
-c     = -2.944/log(D95/D50);
+D50 = optpara(2);
+D95 = optpara(3);
+c = -2.944 / log(D95 / D50);
 % parameter section-----
 
 % update pftpar
@@ -61,14 +61,17 @@ zm = [50, 1450, 3500]; % mm
 [Ei, fwet, ~] = interception(LAI, Pe, pEc, pftpar);
 
 % snow sublimation, snow melt
-[snp, Esb, ~, Pnet] = snp_balance(Pe, Ta, Ei, snp);
+new_Pe = max(Pe - Ei, 0);
+[snp, Esb, ~, Pnet] = snp_balance(new_Pe, Ta, Tas, snp, pEs);
 
 % runoff
 [srf, IWS, Vmax] = runoff_up(Pnet, zgw, zm, wa, soilpar);
 
 % variables assciated with soil water balance
-[wa, zgw, Tr, Es, uex] = sw_balance(IWS, pEc, pEs, Ta, Topt, s_VOD,...
-    wa, soilpar, pftpar, fwet, zm, zgw); 
+new_pEc = max(pEc - Ei, 0);
+new_pEs = max(pEs - Esb, 0);
+[wa, zgw, Tr, Es, uex, theta_cs] = sw_balance(IWS + IWU, new_pEc, new_pEs, Ta, Topt, s_VOD, ...
+    wa, soilpar, pftpar, fwet, zm, zgw);
 
 % total Evaporanspiration
 Et = Tr + Es + Ei + Esb;
