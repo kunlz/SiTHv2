@@ -4,7 +4,7 @@
 
 <img src="image\fig1.png" alt="fig1" style="zoom:40%;" />
 
-<center> The overall schematic diagram for the SiTHM </center>
+<center> The overall schematic diagram for the SiTH </center>
 
 #### Here, we tested it at a alpine grassland site, Arou, where located in the northwest China. Perfect results at such a daily scale ! 
 
