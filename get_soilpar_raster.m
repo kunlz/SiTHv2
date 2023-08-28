@@ -36,7 +36,7 @@ store(:,1) = 1000 .* store(:,1);
 
 % [~,b] = ismember(soilType, soilty);      
 if SC == 0
-    SC = 7;
+    SC = 3;
 end
 soilpar = store(SC, :);
 

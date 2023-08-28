@@ -1,7 +1,7 @@
 % ------------------------ %
 % Soil moisture Constrains %
 % ------------------------ %
-function [f_sm, f_sm_s, theta_c] = swc_stress(wa, soilpar, pET, pftpar)
+function [f_sm, f_sm_s] = swc_stress(wa, soilpar, pET, pftpar)
 % -------- function input -------
 % wa      : The antecedent soil water content expressed
 %           as a function of the WHC in that layer
@@ -29,18 +29,14 @@ function [f_sm, f_sm_s, theta_c] = swc_stress(wa, soilpar, pET, pftpar)
 theta_fc = soilpar(5);
 theta_wp = soilpar(7);
 % theta_c = soilpar(6);
-% % 
+
 % Canopy height
 CH = pftpar(5);
-% CH = 2
-CH_scalar = sqrt(CH);
+CH_scalar = CH^0.5;
 CH_scalar = 4*((CH_scalar-0.7)/4.3)+1; % scale to 1 : 5, 0.7 is min 0.5^0.5
 
-% pET = 5;
-% CH = 20;
 a = 0.1;
 p = 1./(1+pET) - a.*(1./(1+CH));
-% p = 1./10 - 0.2.*1./(1+CH); 
 
 theta_wpCH = theta_wp/CH_scalar;
 
@@ -52,18 +48,16 @@ if theta_c < theta_wpCH
 elseif theta_c > theta_fc
     theta_c = theta_fc;
 end
+% theta_c   = soilpar(6);
 
-% theta_c = soilpar(6);
-
-% % % water constraint for plant
-% % if wa <= theta_wp
-% %     f_sm = 0;
-% % elseif wa >= theta_c
-% %     f_sm = 1;
-% % else
-% %     f_sm = 1 - ((theta_c-wa)./(theta_c-theta_wp)).^2; 
-% % end
-% % 
+% water constraint for plant
+% if wa <= theta_wp
+%     f_sm = 0;
+% elseif wa >= theta_c
+%     f_sm = 1;
+% else
+%     f_sm = 1 - ((theta_c-wa)./(theta_c-theta_wp)).^2; 
+% end
 if wa <= theta_wpCH
     f_sm = 0;
 elseif wa >= theta_c
@@ -74,13 +68,14 @@ end
 
 
 % water constraint for soil evaporation
-if wa <= theta_wp
+theta_wp_soil = 0;
+if wa <= theta_wp_soil
     f_sm_s = 0;
 elseif wa >= theta_fc
     f_sm_s = 1;
 else
 %     f_sm_s = ((wa - theta_wp)./(theta_fc - theta_wp)).^1;
-    f_sm_s = (wa-theta_wp)/(theta_fc - theta_wp);
+    f_sm_s = (wa-theta_wp_soil)/(theta_fc - theta_wp_soil);
 end
 
 end

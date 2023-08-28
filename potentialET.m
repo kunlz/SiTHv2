@@ -38,6 +38,10 @@ gamma = (Cp.*Pa)./(eps*lambda); % Psychrometric constant (kPa/degC)
 pEc = ((Rnc.*alpha.*delta./(delta+gamma))./lambda).*24.*3600;
 pEs = ((Rns-G).*alpha.*delta./(delta+gamma)./lambda).*24.*3600;
 
+% pEc = (Rnc.*alpha.*delta./(delta+gamma));
+% pEs = (Rns-G).*alpha.*delta./(delta+gamma);
+
+
 pEc = max(pEc, 0);
 pEs = max(pEs, 0);
 % pEc = ((Rnc.*delta./(delta+0.14.*gamma))./lambda).*24.*3600; % Yang 

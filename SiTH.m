@@ -11,7 +11,7 @@
 % Questions to zhangkun322@foxmail.com                                    %
 % ----------------------------------------------------------------------- %
 
-function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax, theta_cs] = SiTH(Rn, Ta, Tas, Topt, ...
+function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta, Tas, Topt, ...
     Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara)
 % Main function
 % -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ new_Pe = max(Pe - Ei, 0);
 % variables assciated with soil water balance
 new_pEc = max(pEc - Ei, 0);
 new_pEs = max(pEs - Esb, 0);
-[wa, zgw, Tr, Es, uex, theta_cs] = sw_balance(IWS + IWU, new_pEc, new_pEs, Ta, Topt, s_VOD, ...
+[wa, zgw, Tr, Es, uex] = sw_balance2(IWS + IWU, new_pEc, new_pEs, Ta, Topt, s_VOD, ...
     wa, soilpar, pftpar, fwet, zm, zgw);
 
 % total Evaporanspiration

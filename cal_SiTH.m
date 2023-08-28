@@ -13,7 +13,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
         RF = zeros(size(Rni, 1), 1);
         GW = zeros(size(Rni, 1), 1);
 
-        for k = 1 : 50 % set the spin-up time (50 years)
+        for k = 1 : 100 % set the spin-up time (100 years)
 
             for i = 1:size(Rni, 1)
 
@@ -27,7 +27,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
                 LAI = LAIii(i, 1);
                 s_VOD = s_VODi(i, 1);
 
-                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~, theta_cs] = SiTH(Rn, Ta, Tas, Top, ...
+                [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Tas, Top, ...
                     Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
                 ETs(i, 1) = Et;
@@ -40,9 +40,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
                 GW(i, 1) = zgw;
 
             end
-
         end
-
     else
 
         ETs = zeros(size(Rni, 1), 1);
@@ -54,7 +52,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
         RF = zeros(size(Rni, 1), 1);
         GW = zeros(size(Rni, 1), 1);
 
-        for i = 1:size(Rni, 1)
+        for i = 1 : size(Rni, 1)
 
             Rn = Rni(i, 1);
             Ta = Tai(i, 1);
@@ -66,7 +64,7 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
             LAI = LAIii(i, 1);
             s_VOD = s_VODi(i, 1);
 
-            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~, theta_cs] = SiTH(Rn, Ta, Tas, Top, ...
+            [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, ~, ~, ~] = SiTH(Rn, Ta, Tas, Top, ...
                 Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara);
 
             ETs(i, 1) = Et;
@@ -75,11 +73,9 @@ function [ETs, Trs, Ess, Eis, Esbs, SM, RF, GW, snp] = cal_SiTH(Rni, Tai, Tasi, 
             Eis(i, 1) = Ei;
             Esbs(i, 1) = Esb;
             SM(i, :) = wa;
-            RF(i, 1) = theta_cs;
+            RF(i, 1) = srf;
             GW(i, 1) = zgw;
 
         end
-
     end
-
 end
