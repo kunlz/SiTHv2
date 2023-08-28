@@ -4,9 +4,7 @@
 
 <img src="image\fig1.png" alt="fig1" style="zoom:40%;" />
 
-<center> The overall schematic diagram for the SiTH </center>
-
-#### Here, we tested it at a alpine grassland site, Arou, where located in the northwest China. 
+#### A test at Arou, a alpine grassland site located in the northwest China. 
 
 <img src="image\testFigure_Arou.png" style="zoom: 15%;" />
 
@@ -14,13 +12,11 @@
 
 <img src="image\GlobalET3.png" style="zoom: 15%;" />
 
-##### For the details, please see the published paper at http://www.sciencedirect.com/science/article/pii/S0022169419306481
-
 ### Reference:
 
->Zhu, G., Zhang, K., Chen, H., Wang, Y., Su, Y., Zhang, Y., and Ma, J. (2019). Development and evaluation of a simple hydrologically based model for terrestrial evapotranspiration simulations. Journal of Hydrology *577*, 123928. 
+>Zhu, G., Zhang, K., Chen, H., Wang, Y., Su, Y., Zhang, Y., and Ma, J. (2019). Development and evaluation of a simple hydrologically based model for terrestrial evapotranspiration simulations. Journal of Hydrology *577*, 123928. http://www.sciencedirect.com/science/article/pii/S0022169419306481
 >
->Zhang, K., Zhu, G., Ma, N., Chen, H., Shang, S. (2022). Improvement of evapotranspiration simulation in a physically based ecohydrological model for the groundwater-soil-plant-atmosphere continuum. *613*, 128440. 
+>Zhang, K., Zhu, G., Ma, N., Chen, H., Shang, S. (2022). Improvement of evapotranspiration simulation in a physically based ecohydrological model for the groundwater-soil-plant-atmosphere continuum. Journal of Hydrology *613*, 128440. https://ww.sciencedirect.com/science/article/pii/S0022169422010101
 
 
 
