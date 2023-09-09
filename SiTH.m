@@ -68,9 +68,8 @@ new_Pe = max(Pe - Ei, 0);
 [srf, IWS, Vmax] = runoff_up(Pnet, zgw, zm, wa, soilpar);
 
 % variables assciated with soil water balance
-new_pEc = max(pEc - Ei, 0);
 new_pEs = max(pEs - Esb, 0);
-[wa, zgw, Tr, Es, uex] = sw_balance2(IWS + IWU, new_pEc, new_pEs, Ta, Topt, s_VOD, ...
+[wa, zgw, Tr, Es, uex] = sw_balance2(IWS + IWU, pEc, new_pEs, Ta, Topt, s_VOD, ...
     wa, soilpar, pftpar, fwet, zm, zgw);
 
 % total Evaporanspiration
