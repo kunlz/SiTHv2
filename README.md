@@ -16,7 +16,7 @@
 
 >Zhu, G., Zhang, K., Chen, H., Wang, Y., Su, Y., Zhang, Y., and Ma, J. (2019). Development and evaluation of a simple hydrologically based model for terrestrial evapotranspiration simulations. Journal of Hydrology *577*, 123928. http://www.sciencedirect.com/science/article/pii/S0022169419306481
 >
->Zhang, K., Zhu, G., Ma, N., Chen, H., Shang, S. (2022). Improvement of evapotranspiration simulation in a physically based ecohydrological model for the groundwater-soil-plant-atmosphere continuum. Journal of Hydrology *613*, 128440. https://ww.sciencedirect.com/science/article/pii/S0022169422010101
+>Zhang, K., Zhu, G., Ma, N., Chen, H., Shang, S. (2022). Improvement of evapotranspiration simulation in a physically based ecohydrological model for the groundwater-soil-plant-atmosphere continuum. Journal of Hydrology *613*, 128440. https://www.sciencedirect.com/science/article/pii/S0022169422010101
 
 
 
