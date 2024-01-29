@@ -127,10 +127,10 @@ for yr = 1982 : 2020
     EMO_LAI = EMO_LAI.LAIx; 
     
     % Satellite-based VOD
-%     disp('Construct Object for Satellite-based VOD  ...')
-%     EMO_VOD = matfile([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
-    % EMO_VOD = load([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
-    % EMO_VOD = EMO_VOD.VODCAy;
+    disp('Construct Object for Satellite-based VOD  ...')
+    % EMO_VOD = matfile([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
+    EMO_VOD = load([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
+    EMO_VOD = EMO_VOD.VODCAy;
 
     % Satellite-based Landcover
     disp(['Load Satellite-based Landcover  ... For the year :: ' num2str(yr)])
@@ -170,18 +170,11 @@ for yr = 1982 : 2020
         
         % matfile read each row, latitude read
         Rnix = permute(EMO_Rn(i, :, :), [3, 2, 1]);
-
         Taix = permute(EMO_Ta(i, :, :), [3, 2, 1]);
-
         Precix = permute(EMO_Preci(i, :, :), [3, 2, 1]);
-
         Paix = permute(EMO_Pa(i, :, :), [3, 2, 1]);
-
         LAIix = permute(EMO_LAI(i, :, :), [3, 2, 1]);
-
-        % VODix = permute(EMO_VOD(i, :, :), [3, 2, 1]);
-
-        % read IWU
+        VODix = permute(EMO_VOD(i, :, :), [3, 2, 1]);
         % IWUix = permute(EMO_IWU.IWUx(i, :, :), [3, 2, 1]);
 
         % X_mat file for different output variables
@@ -219,16 +212,16 @@ for yr = 1982 : 2020
 
             LAIii = interp1(xo', LAIi, xi', 'pchip', 'extrap');
             % plot(xo',LAIi,'o',xi',LAIii);
-            LAIii(LAIii < 0) = 0.2;
+            LAIii(LAIii < 0) = 0;
 
             % Cal G_soil, % Choudhury et al., 1987
             Gi = 0.4 .* Rni .* exp(-0.5 .* LAIii);
 
             % Get Stress from VOD
-%             VODi = 0.001.*double(VODix(1:days, j));
-%             VODi = smooth(VODi, 7, 'moving');
-%             VODi(VODi < 0) = 0;
-%             s_VODi = (VODi ./ max(VODi)).^0.5;
+            VODi = 0.001.*double(VODix(1:days, j));
+            % VODi = smooth(VODi, 7, 'moving');
+            VODi(VODi < 0) = 0;
+            s_VODi = (VODi ./ max(VODi)).^0.5;
             s_VODi = ones(days,1);
 
             % Get Topt
@@ -251,7 +244,6 @@ for yr = 1982 : 2020
 
             % optpara
             optpara = get_optpara_new(PFTi);
-            optpara(1) = 1.26;
             
             % check wa
             wa(wa<0) = 0.01; 
