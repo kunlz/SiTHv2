@@ -4,7 +4,7 @@ This is a novel Eco-hydrological model, Simple Terrestrial Hydrosphere version 2
 
 <img src="image\fig1.png" alt="fig1" style="zoom:40%;" />
 
-<center><strong>The conceptual diagram of the hydrological process in the SiTHv2 model.</strong></center>
+<center><strong>✌️The conceptual diagram of the hydrological process in the SiTHv2 model.</strong></center>
 
 ---
 
