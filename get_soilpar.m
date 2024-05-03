@@ -1,4 +1,4 @@
-function [soilpar] = get_soilpar_raster(SC)
+function [soilpar] = get_soilpar(SC)
 % ----------Input----------
 % Soil Type idnex
 % ----------Output----------
@@ -28,16 +28,6 @@ store = [1.3841	   -0.0232       0.373	   3.39	    0.151	  0.109	  0.035;    % 1
          0.2967	   -0.0453	     0.481	   10.4	    0.390	  0.384	  0.274;    % 11 Silty clay
          0.2580	   -0.0531	     0.461	   12.1	    0.417	  0.390	  0.282];   % 12 clay
 % -----------------------------------------------------------------------------------------------
-store(:,1) = 1000 .* store(:,1);
-
-% soilty = {'Sand','Loamy_Sand','Sandy_Loam','Loam','Slit','Silty_Loam',...
-%           'Sandy_Clay_Loam','Clay_Loam','Silty_Clay_Loam','Sandy_Clay',...
-%           'Silty_Clay','Clay'};
-
-% [~,b] = ismember(soilType, soilty);      
-if SC == 0
-    SC = 3;
-end
+store(:,1) = 1000 .* store(:,1); % m --> mm
 soilpar = store(SC, :);
-
 end

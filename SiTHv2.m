@@ -1,18 +1,18 @@
 % ----------------------------------------------------------------------- %
 %                                                                         %
 %                            ==============                               %
-%                              SiTH model                                 %
+%                             SiTHv2 model                                %
 %                            ==============                               %
 %                                                                         %
-% Written by : Kun Zhang & Gaofeng Zhu
-%              University of Hong Kong, Lanzhou University                %
+% Written by : Kun Zhang & Gaofeng Zhu                                    %
+%              HKU, LZU                                                   %
 % Original version : 5/9/2018                                             %
-% Last modified : 17/1/2022                                               %
+% Last modified : 17/1/2023                                               %
 % Questions to zhangkun322@foxmail.com                                    %
 % ----------------------------------------------------------------------- %
 
-function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta, Tas, Topt, ...
-    Pe, IWU, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp, optpara)
+function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTHv2(Rn, Ta, Tas, Topt, ...
+    Pe, Pa, s_VOD, G, LAI, soilpar, pftpar, wa, zgw, snp)
 % Main function
 % -------------------------------------------------------------------------
 % Model inout  ::  1  - Rn      -- Net Radiation, W/m-2
@@ -40,22 +40,11 @@ function [Et, Tr, Es, Ei, Esb, wa, srf, zgw, snp, Pnet, IWS, Vmax] = SiTH(Rn, Ta
 %              ::  8 - snp     -- Snow package (new), mm day-1
 % -------------------------------------------------------------------------
 
-% parameter section-----
-alpha = optpara(1); % alpha = 1.26;
-D50 = optpara(2);
-D95 = optpara(3);
-c = -2.944 / log(D95 / D50);
-% parameter section-----
-
-% update pftpar
-pftpar(2) = D50;
-pftpar(3) = c;
-
 % set the soil depth for three soil layers
 zm = [50, 1450, 3500]; % mm
 
 % potential Evaporation allocated to canopy and soil surface
-[pEc, pEs] = potentialET(Rn, G, LAI, Ta, Pa, alpha);
+[pEc, pEs] = potentialET(Rn, G, LAI, Ta, Pa);
 
 % interception evaporation
 [Ei, fwet, ~] = interception(LAI, Pe, pEc, pftpar);
@@ -69,7 +58,7 @@ new_Pe = max(Pe - Ei, 0);
 
 % variables assciated with soil water balance
 new_pEs = max(pEs - Esb, 0);
-[wa, zgw, Tr, Es, uex] = sw_balance2(IWS + IWU, pEc, new_pEs, Ta, Topt, s_VOD, ...
+[wa, zgw, Tr, Es, uex] = sw_balance(IWS, pEc, new_pEs, Ta, Topt, s_VOD, ...
     wa, soilpar, pftpar, fwet, zm, zgw);
 
 % total Evaporanspiration

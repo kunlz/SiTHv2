@@ -31,9 +31,10 @@ theta_wp = soilpar(7);
 % theta_c = soilpar(6);
 
 % Canopy height
-CH = pftpar(5);
+CH = pftpar(4);
 CH_scalar = CH^0.5;
-CH_scalar = 4*((CH_scalar-0.7)/4.3)+1; % scale to 1 : 5, 0.7 is min 0.5^0.5
+% scale [1, 25] to [1, 5] 
+CH_scalar = 4*((CH_scalar-0.7)/4.3)+1;
 
 a = 0.1;
 p = 1./(1+pET) - a.*(1./(1+CH));
@@ -50,14 +51,7 @@ elseif theta_c > theta_fc
 end
 % theta_c   = soilpar(6);
 
-% water constraint for plant
-% if wa <= theta_wp
-%     f_sm = 0;
-% elseif wa >= theta_c
-%     f_sm = 1;
-% else
-%     f_sm = 1 - ((theta_c-wa)./(theta_c-theta_wp)).^2; 
-% end
+
 if wa <= theta_wpCH
     f_sm = 0;
 elseif wa >= theta_c
@@ -67,7 +61,7 @@ else
 end
 
 
-% water constraint for soil evaporation
+% constraint for soil evaporation
 theta_wp_soil = 0;
 if wa <= theta_wp_soil
     f_sm_s = 0;
@@ -75,10 +69,14 @@ elseif wa >= theta_fc
     f_sm_s = 1;
 else
 %     f_sm_s = ((wa - theta_wp)./(theta_fc - theta_wp)).^1;
-    f_sm_s = (wa-theta_wp_soil)/(theta_fc - theta_wp_soil);
+    f_sm_s = (wa-theta_wp_soil)/(theta_fc - theta_wp_soil); % for soil evaporation only
 end
 
 end
+
+
+
+
 
 % --- old version
 % % wc = (theta_c - theta_wp) / (theta_fc - theta_wp);

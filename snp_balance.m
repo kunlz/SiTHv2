@@ -6,12 +6,10 @@ function [snowpack, Esb, snowmelt, Pnet] = snp_balance(preci, Ta, Tas, snowpack,
 % snowmelt :: snow melt
 % Esb      :: snow sublimation
 
-% snow sublimation, set as an emperical factor
 % Esnow_emp = 0.84.*(0.864 .* (7.093 .* Ta + 28.26)) ./ (Ta.^2 - 3.593 .* Ta + 5.175);
+Esnow = pEs; % Simple equivalent (Needs further development)
 
-Esnow = pEs;
-
-% we set only snowfall occurs at Ta below zero
+% only snowfall occurs at Ta below zero
 if Ta <= 0
     
     % Add new snowfall, Ta<=0
@@ -44,12 +42,9 @@ else
     snowmelt = min(snowpack, snowmelt_x);
     snowpack = snowpack - snowmelt;
     
-    % net Precipitation into soil surface
+    % net water into soil surface
     Pnet = max(0, preci + snowmelt);
     
 end
-
-% % new snowpack
-% snowpack = snowpack - Esb;
 
 end

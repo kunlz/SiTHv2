@@ -1,13 +1,13 @@
 
 clc
 clear 
-close all
 
-res = 0.1;
+% Set spatial resolution
+res = 0.1; % degrees, global
 r_m = 180 / res;
 r_n = 360 / res;
 % Output files folder :
-Output_folder = 'Y:/SiTHv2_out_longterm/ERA5Lnew2/';
+Output_folder = 'Y:/SiTHv2_out_longterm/';
 
 if exist(Output_folder, 'dir') == 0.
     mkdir(Output_folder);
@@ -21,35 +21,29 @@ subfolder_Rn = 'Rn/RN_ERA5L/RN.ERA5L.GLASS.S100.A';
 subfolder_Preci = 'Preci/ERA5L/P.ERA5L.scale001.A';
 subfolder_Ta = 'Ta/Ta.MSWX.scale001.A';
 subfolder_Pa = 'Pa/Pa.MSWX.scale001.A';
-% subfolder_SM = 'SMcci/SM.CCIv071.scale00001.A'; 
-
-
 subfolder_LAI = 'LAI/GEOV2_LAI/THEIA_GEOV2_R01_AVHRR_LAI_A'; 
 subfolder_LC = 'LC/hildap_vGLOB1.0f/hildap_vGLOB.A';
-% subfolder_VOD = 'Vegetation_Optical_Depth/VODCA/0.1deg/VODCA_Xband_A';
+subfolder_VOD = 'Vegetation_Optical_Depth/VODCA/0.1deg/VODCA_Xband_A';
 
-% subfolder_IWU = 'IWU/0.1deg/IWU_d_ens_scale001_A';
-
-% georeference
+% Set georeference, for 0.25 degrees, global
 latlim = [-90,90];
 lonlim = [-180,180];
 rasterSize = [720,1440];
 RA = georefcells(latlim,lonlim,rasterSize,'ColumnsStartFrom','north');
 
-% Load the Soil Type dataset
+% Load soil type
 Soilraster = load('inpara\Soilraster.mat');
 Soilraster = Soilraster.Soilraster; 
-% [Soilraster,~] = georesize(Soilraster,RA,2.5,"nearest"); 
 
-% load the land mask
-maskland = load('inpara\mask01new2.mat');
+% Load land mask
+maskland = load('inpara\landmask01.mat');
 maskland = uint8(maskland.mask2);
 
 % Load the optimal temperature for plant growth
-Topt = load('inpara\Topt_v4.mat');
+Topt = load('inpara\Topt.mat');
 Topt = single(Topt.Topt_new);
 
-% Parallel calculation initialization
+% Parallel calculation
 % parpool('local', 40);
 
 % Main loops
@@ -61,7 +55,7 @@ for yr = 1982 : 2020
     % spin-up year : 100 years
     if yr == 1981
 
-        spinfg = 1;
+        spinfg = 1; % need spin-up
         disp(' ')
         disp('start year ... spin-up ... set spinfg = 1')
 
@@ -71,13 +65,8 @@ for yr = 1982 : 2020
         snpp = zeros(r_m, r_n); % initial value for snowpack depth
 
         % load the updated variables
-%         uptval = load('upt_vals_01_backup.mat');
-%         uptval = uptval.X_upt;
-%         
-%         waa = uptval(:,:,1:3); 
-%         zgww = uptval(:,:,4); 
-%         snpp = uptval(:,:,5); 
-
+        % uptval = load('upt_vals_01_backup.mat');
+        % uptval = uptval.X_upt;
     else
         spinfg = 0;
         disp(' ')
@@ -89,12 +78,12 @@ for yr = 1982 : 2020
         waa = uptval(:, :, 1:3); 
         zgww = uptval(:, :, 4); 
         snpp = uptval(:, :, 5); 
-
     end
 
     % ----------------- %
-    % load forcing data %
+    % Load Forcing Data %
     % ----------------- %
+    % --------------------------------------------------------------------%
     % Net Radiation, W/m2
     disp(['Load Net Radiation ... For the year :: ' num2str(yr)])
     % EMO_Rn = matfile([Forcing_folder subfolder_Rn num2str(yr) '.mat']);
@@ -111,7 +100,7 @@ for yr = 1982 : 2020
     disp(['Load Precipitation ... For the year :: ' num2str(yr)])
     % EMO_Preci = matfile([Forcing_folder subfolder_Preci num2str(yr) '.mat']);
     EMO_Preci = load([Forcing_folder subfolder_Preci num2str(yr) '.mat']);
-    EMO_Preci = EMO_Preci.P;
+    EMO_Preci = EMO_Preci.P; 
 
     % Air Pressure, kPa
     disp(['Load Air Pressure ... For the year :: ' num2str(yr)])
@@ -123,33 +112,31 @@ for yr = 1982 : 2020
     disp(['Load Satellite-based LAI  ... For the year :: ' num2str(yr)])
     % EMO_LAI = matfile([Forcing_folder subfolder_LAI num2str(yr) '.mat']);
     EMO_LAI = load([Forcing_folder subfolder_LAI num2str(yr) '.mat']);
-    EMO_LAItime = EMO_LAI.tt;
+    EMO_LAItime = EMO_LAI.tt; 
     EMO_LAI = EMO_LAI.LAIx; 
     
     % Satellite-based VOD
-    disp('Construct Object for Satellite-based VOD  ...')
+    disp('Load Satellite-based VOD  ...')
     % EMO_VOD = matfile([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
     EMO_VOD = load([Forcing_folder subfolder_VOD num2str(yr) '.mat']);
     EMO_VOD = EMO_VOD.VODCAy;
 
-    % Satellite-based Landcover
+    % Satellite-based Landcover/PFTs
     disp(['Load Satellite-based Landcover  ... For the year :: ' num2str(yr)])
     LC_year = load([Forcing_folder subfolder_LC num2str(yr) '.mat']);
     LC_year = LC_year.LULC; 
-
-    % load IWU
-    % EMO_IWU = matfile([Forcing_folder subfolder_IWU num2str(yr) '.mat']);
-    % IWU = single(IWU.IWUx);
-
-    % [~, ~, days] = size(EMO_Rn);
+    % --------------------------------------------------------------------%
+    
+    % Days of selected year
     days = yeardays(yr);
+
 
     % ------------------ %
     % Parallel Computing %
     % ------------------ %
 
     disp('Preallocate memory to each variables ... ')
-    
+    % 10 variables
     X_ET  = zeros(r_m, r_n, days,'double');
     X_Tr  = zeros(r_m, r_n, days,'double');
     X_Es  = zeros(r_m, r_n, days,'double');
@@ -162,27 +149,26 @@ for yr = 1982 : 2020
     X_GW  = zeros(r_m, r_n, days,'double');
     
     disp('Start calculation ... ')
-
     X_upt = zeros(r_m, r_n, 5);
 
     ppm = ParforProgressbar(r_m, 'showWorkerProgress', false);
     parfor i = 1 : r_m
         
-        % matfile read each row, latitude read
+        % read each row, (latitude)
         Rnix = permute(EMO_Rn(i, :, :), [3, 2, 1]);
         Taix = permute(EMO_Ta(i, :, :), [3, 2, 1]);
         Precix = permute(EMO_Preci(i, :, :), [3, 2, 1]);
         Paix = permute(EMO_Pa(i, :, :), [3, 2, 1]);
         LAIix = permute(EMO_LAI(i, :, :), [3, 2, 1]);
         VODix = permute(EMO_VOD(i, :, :), [3, 2, 1]);
-        % IWUix = permute(EMO_IWU.IWUx(i, :, :), [3, 2, 1]);
 
-        % X_mat file for different output variables
-        X_vals = zeros(days, r_n, 10);
-        X_upti = zeros(1, r_n, 5);
+        % X_mat for different output variables
+        X_vals = zeros(days, r_n, 10); % total
+        X_upti = zeros(1, r_n, 5); % intermediate
 
         for j = 1 : r_n
-
+            
+            % check landmask
             if maskland(i, j) == 0
                 continue
             end
@@ -192,15 +178,13 @@ for yr = 1982 : 2020
             zgw = zgww(i, j);
             snp = snpp(i, j);
 
-            % Meteo forcing for each pixel, rescale
+            % Meteo forcing for each pixel, need rescale
             Rni = 0.01.*double(Rnix(:, j));
             Tai = 0.01.*double(Taix(:, j));
-            Precii = 0.01.*double(Precix(:, j));
-            % IWUi = 0.01.*double(IWUix(:,j));
-            IWUi = zeros(days,1);
+            Precii = 0.01.*double(Precix(:, j));            
             Pai = 0.01.*double(Paix(:, j));
 
-            % calculate Tas
+            % Cal Tas
             Tasi = Tai;
             Tasi(Tasi < 0) = 0;
             Tasi = cumsum(Tasi);
@@ -209,50 +193,41 @@ for yr = 1982 : 2020
             LAIi = 0.01.*double(LAIix(:, j));
             xo = day(EMO_LAItime,"dayofyear");
             xi = 1:1:days;
-
             LAIii = interp1(xo', LAIi, xi', 'pchip', 'extrap');
-            % plot(xo',LAIi,'o',xi',LAIii);
             LAIii(LAIii < 0) = 0;
 
             % Cal G_soil, % Choudhury et al., 1987
             Gi = 0.4 .* Rni .* exp(-0.5 .* LAIii);
 
-            % Get Stress from VOD
+            % Cal VOD-stress
             VODi = 0.001.*double(VODix(1:days, j));
             % VODi = smooth(VODi, 7, 'moving');
             VODi(VODi < 0) = 0;
             s_VODi = (VODi ./ max(VODi)).^0.5;
-            s_VODi = ones(days,1);
 
-            % Get Topt
-            Top = Topt(i, j); % Top = 25;
+            % Topt
+            Top = Topt(i, j); 
             if isnan(Top)
-                Top = 25;
+                Top = 25; % Topt = 25 when Topt is NaN;
             end
 
-            % Parameters set for plant and soil
+            % Parameter-set for plant and soil
             % 1- PlantType
             PFTi = LC_year(i, j);
-            pftpar = get_pftpar_new(PFTi);
+            pftpar = get_pftpar(PFTi);
 
             % 2- SoilType
             SC = Soilraster(i, j);
-            if SC == 0
-                SC = 6;
-            end
             soilpar = get_soilpar_raster(SC);
 
-            % optpara
-            optpara = get_optpara_new(PFTi);
-            
             % check wa
             wa(wa<0) = 0.01; 
 
-            % ------------------ Call SiTH --------------------------------
-            [ETi, Tri, Esi, Eii, Esbi, SMi, RFi, GWi, snpx] = cal_SiTH(Rni,...
-                Tai, Tasi, Precii, IWUi, Pai, Gi, LAIii, Top, s_VODi, ...
-                soilpar, pftpar, wa, zgw, snp, optpara, spinfg);
-            % ------------------ Call SiTH --------------------------------
+            % ------------------ Call SiTHv2 ------------------------------
+            [ETi, Tri, Esi, Eii, Esbi, SMi, RFi, GWi, snpx] = cal_SiTHv2(Rni,...
+                Tai, Tasi, Precii, Pai, Gi, LAIii, Top, s_VODi, ...
+                soilpar, pftpar, wa, zgw, snp, spinfg);
+            % ------------------ Call SiTHv2 ------------------------------
             
             % writeout
             X_vals(:, j, 1) = ETi;
@@ -299,69 +274,40 @@ for yr = 1982 : 2020
 
     % save the variables to output folder
     disp('------------------------- Writing results to mat files ... ')
-    filename = [Output_folder 'SiTH.ET.S100.A' num2str(yr) '.mat'];
+    filename = [Output_folder 'SiTHv2.ET.S100.A' num2str(yr) '.mat'];
     X_ET = int16(100.*X_ET);
     save(filename, 'X_ET', '-v7.3');
 
-    filename = [Output_folder 'SiTH.Tr.S100.A' num2str(yr) '.mat'];
+    filename = [Output_folder 'SiTHv2.Tr.S100.A' num2str(yr) '.mat'];
     X_Tr = int16(100.*X_Tr);
     save(filename, 'X_Tr', '-v7.3');
 
-    filename = [Output_folder 'SiTH.Es.S100.A' num2str(yr) '.mat'];
+    filename = [Output_folder 'SiTHv2.Es.S100.A' num2str(yr) '.mat'];
     X_Es = int16(100.*X_Es);
     save(filename, 'X_Es', '-v7.3');
 
-    filename = [Output_folder 'SiTH.Ei.S100.A' num2str(yr) '.mat'];
+    filename = [Output_folder 'SiTHv2.Ei.S100.A' num2str(yr) '.mat'];
     X_Ei = int16(100.*X_Ei);
     save(filename, 'X_Ei', '-v7.3');
 
-    filename = [Output_folder 'SiTH.En.S100.A' num2str(yr) '.mat'];
-    X_Esb = int16(100.*X_Esb);
-    save(filename, 'X_Esb', '-v7.3');
+    % filename = [Output_folder 'SiTHv2.En.S100.A' num2str(yr) '.mat'];
+    % X_Esb = int16(100.*X_Esb);
+    % save(filename, 'X_Esb', '-v7.3');
 
-%     filename = [Output_folder 'SiTH.RF.S10.A' num2str(yr) '.mat']; % mm
-%     X_RF = int16(10.*X_GW);
-%     % imagesc(sum(X_RF,3))
-%     save(filename, 'X_RF', '-v7.3');
+    % filename = [Output_folder 'SiTHv2.RF.S10.A' num2str(yr) '.mat']; % mm
+    % X_RF = int16(10.*X_GW);
+    % % imagesc(sum(X_RF,3))
+    % save(filename, 'X_RF', '-v7.3');
 
-%     filename = [Output_folder 'SiTH.GW.S100.A' num2str(yr) '.mat']; % mm to m
-%     X_GW = int16(X_GW./10);
-%     save(filename, 'X_GW', '-v7.3');
+    % filename = [Output_folder 'SiTHv2.GW.S100.A' num2str(yr) '.mat']; % mm to m
+    % X_GW = int16(X_GW./10);
+    % save(filename, 'X_GW', '-v7.3');
 
-    filename = [Output_folder 'SiTH.SM.S100.A' num2str(yr) '.mat'];
+    filename = [Output_folder 'SiTHv2.SM.S100.A' num2str(yr) '.mat'];
     X_SM1 = int16(10000.*X_SM1); 
     X_SM2 = int16(10000.*X_SM2); 
     X_SM3 = int16(10000.*X_SM3); 
     save(filename, 'X_SM1', 'X_SM2', 'X_SM3', '-v7.3');
-
-    % writeout to nc files
-    %     disp('------------------------- Writing results to netCDF files ... ')
-    %     filename = [Output_folder 'SiTH.ET.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'Et', 'Actual Evapotranspiration', X_ET, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.Tr.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'Tr', 'Plant Transpiration', X_Tr, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.Es.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'Es', 'Soil Evaporation', X_Es, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.Ei.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'Ei', 'Interception Evaporation', X_Ei, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.En.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'En', 'Snow\Ice Sublimation', X_Esb, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.RF.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'RF', 'Surface Runoff', X_RF, days, 'mm');
-    %
-    %     filename = [Output_folder 'SiTH.GW.A' num2str(yr) '.nc'];
-    %     write2nc(filename, 'GW', 'Groundwater table depth', X_GW, days, 'm');
-    %     tic
-    %     filename = [Output_folder 'SiTH.SM.A' num2str(yr) '.nc'];
-    %     write2nc3SM(filename, 'sm1', 'Soil Moisture at layer #1', ...
-    %         'sm2', 'Soil Moisture at layer #2', 'sm3', 'Soil Moisture at layer #3', ...
-    %         X_SM1, X_SM2, X_SM3, days, '0.01');
-    %     toc
 
     disp('------------------------- End of this year ... ')
     disp(' ')

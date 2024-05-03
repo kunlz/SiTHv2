@@ -1,9 +1,9 @@
 % ======================================================================= %
 % ----------------------- %
-%    Soil Water Balance   %     Kun Zhang, 2021/04/17, Beijing
+%    Soil Water Balance   %     
 % ----------------------- %
 % ======================================================================= %
-function [wa, zgw, Tr, Es, uex] = sw_balance2(IWS, pEc, pEs, Ta, Topt, s_VOD, ...
+function [wa, zgw, Tr, Es, uex] = sw_balance(IWS, pEc, pEs, Ta, Topt, s_VOD, ...
     wa, soilpar, pftpar, wet, zm, zgw)
     % ---------- function input -------
     % IWS     -- total water enter into soil surface, mm
@@ -482,7 +482,6 @@ function [wa, zgw, Tr, Es, uex] = swb_case2(wa, IWS, pEc, pEs, s_tem, s_vod, ...
         vw1 = 0;
     end
     
-    % vw1 = vw1 + IWU;
     % layer #2
     % existed water column in the unsaturated zone #2
     wa2_unsat = (wa2 * zm(2) - theta_sat * (zm(2) - d2)) / d2;
@@ -750,8 +749,7 @@ function [wa, zgw, Tr, Es, uex] = swb_case3(wa, IWS, pEc, pEs, s_tem, s_vod, ...
         wa1 = wa1_unsat + IWS / d1;
         vw1 = 0; % no exceeded water
     end
-    
-    % vw1 = vw1+IWU;
+   
     % layer #2
     % existed water column in the unsaturated zone #2
     wa2_unsat = wa2;
@@ -1061,7 +1059,6 @@ function [wa, zgw, Tr, Es, uex] = swb_case4(wa, IWS, pEc, pEs, s_tem, s_vod, ...
         vw1 = 0;
     end
 
-    % vw1 = vw1+IWU;
     % layer #2
     % existed water column in the unsaturated zone #2
     wa2_unsat = wa2;
