@@ -1,6 +1,6 @@
 # SiTHv2 model
 
-This is a novel Eco-hydrological model, Simple Terrestrial Hydrosphere version 2 (SiTHv2), developed for estimating the essential variables associated with terrestrial water cycle, which is based on the scheme of the groundwater-soil-plant-atmosphere continuum (GSPAC).
+This is a novel Eco-hydrological model, Simple Terrestrial Hydrosphere version 2 (SiTHv2), developed for estimating the essential variables associated with terrestrial water cycle, which is based on the scheme of the groundwater-soil-plant-atmosphere continuum.
 
 <img src="image\fig1.png" alt="fig1" style="zoom:40%;" />
 
