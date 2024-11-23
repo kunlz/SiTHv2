@@ -1222,6 +1222,7 @@ function [wa, zgw, Tr, Es, uex] = swb_case4(wa, IWS, pEc, pEs, s_tem, s_vod, ...
         ff3 = (wa3 - theta_sat) * d3; % extra water from upper layer
         ff3 = max(ff3, 0);
         wa3_unsat = theta_sat;
+        wa3 = theta_sat;
     else
         ff3 = 0;
         wa3_unsat = wa3;
